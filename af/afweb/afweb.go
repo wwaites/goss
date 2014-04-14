@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"hubs.net.uk/oss/log"
+	"hubs.net.uk/oss/rrd"
 	"hubs.net.uk/oss/web"
 	"net"
-	"net/http"
 	"net/http/fcgi"
 	"os"
 )
@@ -14,6 +14,7 @@ import (
 var family string
 var sock string
 var prefix string
+var data string
 var debug bool
 func init() {
         flag.Usage = func() {
@@ -26,13 +27,9 @@ Usage: %s [flags]
 	flag.StringVar(&family, "family", "tcp", "FCGI socket address family")
         flag.StringVar(&sock, "sock", "127.0.0.1:6072", "FCGI socket address")
 	flag.StringVar(&prefix, "prefix", "", "Request URL prefix")
+	flag.StringVar(&data, "data", "/var/www/mrtg", "Data directori containing RRD files")
         flag.BoolVar(&debug, "d", false, "Debug")
 }
-
-func TestHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "hello world\n")
-}
-
 
 func main() {
 	flag.Parse()
@@ -42,8 +39,10 @@ func main() {
 		log.Err.Fatalf("net.Listen(\"%s\", \"%s\"): %s", family, sock, err)
 	}
 
-	mux := web.NewServeMux("Foo Bar")
-	mux.HandleFunc(prefix + "/test", TestHandler)
+	mux := web.NewServeMux(prefix, "Foo Bar")
+
+	grapher := rrd.NewGraphHandler(data)
+	mux.Handle("/graph/", grapher)
 
 	err = fcgi.Serve(listener, mux)
 	if err != nil {
