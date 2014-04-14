@@ -2,7 +2,7 @@ package event
 
 import (
 	"errors"
-	"hubs.net.uk/util"
+	"hubs.net.uk/oss/util"
         "labix.org/v2/mgo/bson"
 	"time"
 )

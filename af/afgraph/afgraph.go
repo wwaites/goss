@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"hubs.net.uk/event"
-	"hubs.net.uk/log"
+	"hubs.net.uk/oss/event"
+	"hubs.net.uk/oss/log"
 	"github.com/ziutek/rrd"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"

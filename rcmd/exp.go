@@ -2,7 +2,7 @@ package rcmd
 
 import (
 	"fmt"
-	"hubs.net.uk/foreign/gexpect"
+	"hubs.net.uk/oss/foreign/gexpect"
 	"regexp"
 )
 
